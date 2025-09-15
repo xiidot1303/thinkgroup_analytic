@@ -4,9 +4,14 @@ import logging
 import traceback
 import html
 from django.db import close_old_connections
+from bot.models import Staff
 
 
 async def start(update: Update, context: CustomContext):
+    # check user has in staff list
+    if not await Staff.objects.filter(user_id=update.effective_user.id).aexists():
+        await update.message.reply_text("Sizda bu botdan foydalanish uchun ruxsat yo‘q. Iltimos, administrator bilan bog‘laning.")
+        return
     text = "Xarajatlarni boshqarish tizimiga xush kelibsiz!\n\n" \
         """Yangi xarajat qo'shish uchun "➕" tugmasini bosing.""" \
 
